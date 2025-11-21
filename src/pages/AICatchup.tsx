@@ -530,13 +530,20 @@ const AICatchup = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [catchupData, setCatchupData] = useState<ReturnType<typeof generateCatchupData> | null>(null);
+  const [selectedLeaveId, setSelectedLeaveId] = useState<string | null>(null);
 
   if (!currentUser) return null;
 
-  // Find most recent completed leave
-  const recentLeave = leaveRequests
-    .filter(r => r.email === currentUser.email && r.status === 'approved')
-    .sort((a, b) => new Date(b.end_date).getTime() - new Date(a.end_date).getTime())[0];
+  // Get all approved leaves for this user (past leaves only)
+  const today = new Date().toISOString().split('T')[0];
+  const myApprovedLeaves = leaveRequests
+    .filter(r => r.email === currentUser.email && r.status === 'approved' && r.end_date <= today)
+    .sort((a, b) => new Date(b.end_date).getTime() - new Date(a.end_date).getTime());
+
+  // Selected leave (default to most recent)
+  const selectedLeave = selectedLeaveId
+    ? myApprovedLeaves.find(l => l.request_id === selectedLeaveId)
+    : myApprovedLeaves[0];
 
   const handleGenerateCatchup = () => {
     setIsGenerating(true);
@@ -551,8 +558,8 @@ const AICatchup = () => {
           setCatchupData(generateCatchupData(
             currentUser.full_name,
             currentUser.user_role,
-            recentLeave?.start_date || '2025-11-15',
-            recentLeave?.end_date || '2025-11-20'
+            selectedLeave?.start_date || '2025-11-15',
+            selectedLeave?.end_date || '2025-11-20'
           ));
           return 100;
         }
@@ -602,25 +609,50 @@ const AICatchup = () => {
         )}
       </div>
 
-      {/* Leave Context */}
-      {recentLeave && (
+      {/* Leave Selector */}
+      {myApprovedLeaves.length > 0 ? (
         <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <Calendar className="h-8 w-8 text-purple-600" />
                 <div>
-                  <p className="font-medium">Your Recent Leave</p>
-                  <p className="text-sm text-muted-foreground">
-                    {formatDate(recentLeave.start_date)} - {formatDate(recentLeave.end_date)}
-                    <span className="mx-2">·</span>
-                    {recentLeave.days_requested} days
-                  </p>
+                  <p className="font-medium mb-2">Select Leave to Catch Up On</p>
+                  <select
+                    value={selectedLeaveId || selectedLeave?.request_id || ''}
+                    onChange={(e) => {
+                      setSelectedLeaveId(e.target.value);
+                      setCatchupData(null); // Reset catchup data when changing leave
+                    }}
+                    className="text-sm border rounded-md px-3 py-2 bg-white min-w-[280px]"
+                  >
+                    {myApprovedLeaves.map((leave) => (
+                      <option key={leave.request_id} value={leave.request_id}>
+                        {formatDate(leave.start_date)} - {formatDate(leave.end_date)} ({leave.days_requested} days, {leave.leave_type})
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
-              <Badge className="bg-purple-100 text-purple-700 border-purple-200">
-                {recentLeave.leave_type} leave
-              </Badge>
+              {selectedLeave && (
+                <Badge className="bg-purple-100 text-purple-700 border-purple-200">
+                  {selectedLeave.leave_type} leave
+                </Badge>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-yellow-200 bg-yellow-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <AlertTriangle className="h-8 w-8 text-yellow-600" />
+              <div>
+                <p className="font-medium">No Past Leaves Found</p>
+                <p className="text-sm text-muted-foreground">
+                  You don't have any completed leaves to catch up on yet.
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>

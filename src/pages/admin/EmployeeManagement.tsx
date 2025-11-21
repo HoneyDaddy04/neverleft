@@ -8,8 +8,44 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Pencil, Trash2, Plus, Download, Search } from 'lucide-react';
+import { Pencil, Trash2, Plus, Download, Search, Calculator, AlertTriangle, Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+
+// Calculate prorated leave entitlement based on employment date
+// Rules: <6 months = 0 days, 6-12 months = prorated, 1+ year = full entitlement (14 days)
+function calculateProratedEntitlement(employmentDateStr: string, fullEntitlement: number = 14): { days: number; status: string; monthsEmployed: number } {
+  // Parse date string (various formats: "February 3, 2024" or "DD/MM/YYYY")
+  let employmentDate: Date;
+
+  // Try parsing "Month Day, Year" format
+  const parsed = Date.parse(employmentDateStr);
+  if (!isNaN(parsed)) {
+    employmentDate = new Date(parsed);
+  } else {
+    // Try DD/MM/YYYY format
+    const parts = employmentDateStr.split('/');
+    if (parts.length === 3) {
+      employmentDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+    } else {
+      return { days: fullEntitlement, status: 'Unable to parse date', monthsEmployed: 12 };
+    }
+  }
+
+  const now = new Date();
+  const diffMs = now.getTime() - employmentDate.getTime();
+  const diffMonths = diffMs / (1000 * 60 * 60 * 24 * 30.44); // Average month length
+
+  if (diffMonths < 6) {
+    return { days: 0, status: 'Not yet eligible (< 6 months)', monthsEmployed: Math.floor(diffMonths) };
+  } else if (diffMonths < 12) {
+    // Prorated: (months / 12) * full entitlement, rounded
+    const prorated = Math.round((diffMonths / 12) * fullEntitlement);
+    return { days: prorated, status: 'Prorated (6-12 months)', monthsEmployed: Math.floor(diffMonths) };
+  } else {
+    return { days: fullEntitlement, status: 'Full entitlement (1+ year)', monthsEmployed: Math.floor(diffMonths) };
+  }
+}
 
 const EmployeeManagement = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -216,7 +252,7 @@ const EmployeeManagement = () => {
                   <TableHead>Email</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Team</TableHead>
-                  <TableHead>Manager</TableHead>
+                  <TableHead>Employed Since</TableHead>
                   <TableHead>Country</TableHead>
                   <TableHead>Annual</TableHead>
                   <TableHead>Sick</TableHead>
@@ -232,7 +268,9 @@ const EmployeeManagement = () => {
                     <TableCell>
                       <Badge variant="outline">{employee.team}</Badge>
                     </TableCell>
-                    <TableCell className="text-sm">{employee.manager_name || 'N/A'}</TableCell>
+                    <TableCell className="text-sm">
+                      {employee.employment_date || 'N/A'}
+                    </TableCell>
                     <TableCell>{employee.country}</TableCell>
                     <TableCell>
                       <span className="text-xs">
@@ -347,20 +385,48 @@ const EmployeeManagement = () => {
                   <SelectContent>
                     <SelectItem value="Nigeria">Nigeria</SelectItem>
                     <SelectItem value="Ghana">Ghana</SelectItem>
+                    <SelectItem value="Kenya">Kenya</SelectItem>
                     <SelectItem value="South Africa">South Africa</SelectItem>
                     <SelectItem value="Uganda">Uganda</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Employment Date (DD/MM/YYYY)</Label>
+                <Label>Employment Date (Month Day, Year)</Label>
                 <Input
                   value={formData.employment_date || ''}
                   onChange={(e) => setFormData({ ...formData, employment_date: e.target.value })}
-                  placeholder="01/01/2023"
+                  placeholder="January 1, 2023"
                 />
               </div>
             </div>
+            {/* Auto-calculated entitlement info */}
+            {formData.employment_date && (
+              <Alert className="border-blue-200 bg-blue-50">
+                <Calculator className="h-4 w-4 text-blue-600" />
+                <AlertDescription>
+                  {(() => {
+                    const calc = calculateProratedEntitlement(formData.employment_date, 14);
+                    return (
+                      <div className="flex items-center justify-between">
+                        <span>
+                          <strong>{calc.monthsEmployed} months</strong> employed - {calc.status}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setFormData({ ...formData, annual_entitlement: calc.days })}
+                          className="ml-4"
+                        >
+                          Set to {calc.days} days
+                        </Button>
+                      </div>
+                    );
+                  })()}
+                </AlertDescription>
+              </Alert>
+            )}
             <div className="grid grid-cols-4 gap-4">
               <div className="space-y-2">
                 <Label>Annual Entitlement</Label>
@@ -482,18 +548,38 @@ const EmployeeManagement = () => {
                     <SelectItem value="Ghana">Ghana</SelectItem>
                     <SelectItem value="South Africa">South Africa</SelectItem>
                     <SelectItem value="Uganda">Uganda</SelectItem>
+                    <SelectItem value="Kenya">Kenya</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Employment Date (DD/MM/YYYY)</Label>
+                <Label>Employment Date (Month Day, Year)</Label>
                 <Input
                   value={formData.employment_date || ''}
                   onChange={(e) => setFormData({ ...formData, employment_date: e.target.value })}
-                  placeholder="17/11/2025"
+                  placeholder="November 21, 2025"
                 />
               </div>
             </div>
+            {/* Auto-calculated entitlement for new employees */}
+            {formData.employment_date && (
+              <Alert className="border-blue-200 bg-blue-50">
+                <Calculator className="h-4 w-4 text-blue-600" />
+                <AlertDescription>
+                  {(() => {
+                    const calc = calculateProratedEntitlement(formData.employment_date, 14);
+                    return (
+                      <div className="text-sm">
+                        <strong>{calc.monthsEmployed} months</strong> since employment - {calc.status}
+                        <span className="ml-2 font-semibold text-blue-700">
+                          → Suggested: {calc.days} days annual leave
+                        </span>
+                      </div>
+                    );
+                  })()}
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>

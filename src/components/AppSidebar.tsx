@@ -39,6 +39,7 @@ export function AppSidebar() {
     { title: 'Dashboard', url: '/', icon: Home },
     { title: 'Request Leave', url: '/leave/request', icon: Calendar },
     { title: 'Leave History', url: '/leave/history', icon: Clock },
+    { title: 'Team Calendar', url: '/team/calendar', icon: CalendarDays },
     { title: 'Handovers', url: '/handovers', icon: FileText },
     { title: 'AI Catchup', url: '/catchup', icon: Sparkles },
   ];
@@ -77,13 +78,15 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-lg font-bold text-primary-foreground">N</span>
-          </div>
+          <img
+            src="/curacel favicon.jpg"
+            alt="Curacel"
+            className="w-8 h-8 rounded-lg object-cover"
+          />
           <span className="font-bold text-lg group-data-[collapsible=icon]:hidden">NeverLeft</span>
         </div>
         <p className="text-xs text-muted-foreground mt-1 group-data-[collapsible=icon]:hidden">
-          Leave Management
+          by Curacel
         </p>
       </SidebarHeader>
 

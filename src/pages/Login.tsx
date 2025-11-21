@@ -52,12 +52,14 @@ const Login = () => {
       <div className="w-full max-w-4xl">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-              <span className="text-2xl font-bold text-slate-900">N</span>
-            </div>
+            <img
+              src="/curacel favicon.jpg"
+              alt="Curacel"
+              className="w-12 h-12 rounded-xl object-cover"
+            />
             <h1 className="text-4xl font-bold text-white">NeverLeft</h1>
           </div>
-          <p className="text-slate-400 text-lg">Leave Management System</p>
+          <p className="text-slate-400 text-lg">Leave Management by Curacel</p>
         </div>
 
         <Card className="border-slate-700 bg-slate-800/50 backdrop-blur">
