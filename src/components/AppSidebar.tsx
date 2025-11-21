@@ -18,7 +18,8 @@ import {
   BarChart3,
   Building2,
   Crown,
-  Activity
+  Activity,
+  MessageSquare,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -41,7 +42,8 @@ export function AppSidebar() {
     { title: 'Leave History', url: '/leave/history', icon: Clock },
     { title: 'Team Calendar', url: '/team/calendar', icon: CalendarDays },
     { title: 'Handovers', url: '/handovers', icon: FileText },
-    { title: 'AI Catchup', url: '/catchup', icon: Sparkles },
+    { title: 'HR Support', url: '/support', icon: MessageSquare },
+    { title: 'NeverLeft (AI Catchup)', url: '/catchup', icon: Sparkles },
   ];
 
   const teamLeadNav = [
@@ -55,6 +57,8 @@ export function AppSidebar() {
     { title: 'All Requests', url: '/hr/requests', icon: FileText },
     { title: 'Queries', url: '/hr/queries', icon: HelpCircle },
     { title: 'Capacity Insights', url: '/capacity', icon: TrendingUp },
+    { title: 'Exec Dashboard', url: '/exec', icon: Crown },
+    { title: 'Org Health', url: '/exec/health', icon: Activity },
   ];
 
   const adminNav = [

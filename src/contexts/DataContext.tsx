@@ -7,6 +7,8 @@ import {
   Employee,
   ApprovalAction,
   RequestStatus,
+  SupportQuery,
+  QueryCategory,
 } from '@/types';
 import {
   LEAVE_REQUESTS,
@@ -14,6 +16,7 @@ import {
   POST_LEAVE_NOTES,
   NOTIFICATIONS,
   EMPLOYEES,
+  SUPPORT_QUERIES,
   calculateWorkingDays,
   getEmployeeByEmail,
 } from '@/lib/mockData';
@@ -56,6 +59,14 @@ interface DataContextType {
   employees: Employee[];
   getTeamMembers: (tlEmail: string) => Employee[];
 
+  // Support Queries
+  supportQueries: SupportQuery[];
+  getMySupportQueries: (email: string) => SupportQuery[];
+  getAllSupportQueries: () => SupportQuery[];
+  getOpenSupportQueries: () => SupportQuery[];
+  createSupportQuery: (query: { from_email: string; from_name: string; category: QueryCategory; subject: string; message: string }) => SupportQuery;
+  respondToSupportQuery: (queryId: string, response: string, responderEmail: string, responderName: string) => void;
+
   // Stats
   getOnLeaveToday: () => LeaveRequest[];
   getTeamOnLeaveToday: (tlEmail: string) => LeaveRequest[];
@@ -69,6 +80,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [postLeaveNotes, setPostLeaveNotes] = useState<PostLeaveNote[]>(POST_LEAVE_NOTES);
   const [notifications, setNotifications] = useState<Notification[]>(NOTIFICATIONS);
   const [employees] = useState<Employee[]>(EMPLOYEES);
+  const [supportQueries, setSupportQueries] = useState<SupportQuery[]>(SUPPORT_QUERIES);
 
   // Leave Request methods
   const getMyRequests = useCallback((email: string) => {
@@ -427,6 +439,93 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   }, [leaveRequests]);
 
+  // Support Query methods
+  const getMySupportQueries = useCallback((email: string) => {
+    return supportQueries.filter(q => q.from_email === email);
+  }, [supportQueries]);
+
+  const getAllSupportQueries = useCallback(() => {
+    return supportQueries;
+  }, [supportQueries]);
+
+  const getOpenSupportQueries = useCallback(() => {
+    return supportQueries.filter(q => q.status !== 'resolved');
+  }, [supportQueries]);
+
+  const createSupportQuery = useCallback((
+    query: { from_email: string; from_name: string; category: QueryCategory; subject: string; message: string }
+  ): SupportQuery => {
+    const newQuery: SupportQuery = {
+      id: `SQ-${String(supportQueries.length + 1).padStart(3, '0')}`,
+      from_email: query.from_email,
+      from_name: query.from_name,
+      category: query.category,
+      subject: query.subject,
+      message: query.message,
+      response: null,
+      responded_by_email: null,
+      responded_by_name: null,
+      responded_at: null,
+      status: 'open',
+      created_at: new Date().toISOString(),
+    };
+
+    setSupportQueries(prev => [newQuery, ...prev]);
+
+    // Create notification for HR - notify pelumia@curacel.com
+    const hrNotification: Notification = {
+      id: `NOTIF-${Date.now()}`,
+      user_email: 'pelumia@curacel.com',
+      type: 'query',
+      title: 'New Support Query',
+      message: `${query.from_name} submitted a query: ${query.subject}`,
+      action_url: '/hr/queries',
+      read: false,
+      created_at: new Date().toISOString(),
+    };
+
+    setNotifications(prev => [hrNotification, ...prev]);
+
+    return newQuery;
+  }, [supportQueries]);
+
+  const respondToSupportQuery = useCallback((
+    queryId: string,
+    response: string,
+    responderEmail: string,
+    responderName: string
+  ) => {
+    setSupportQueries(prev => prev.map(query => {
+      if (query.id !== queryId) return query;
+      return {
+        ...query,
+        response,
+        responded_by_email: responderEmail,
+        responded_by_name: responderName,
+        responded_at: new Date().toISOString(),
+        status: 'resolved' as const,
+      };
+    }));
+
+    // Find the query to get the requester's email
+    const query = supportQueries.find(q => q.id === queryId);
+    if (query) {
+      // Create notification for the employee
+      const employeeNotification: Notification = {
+        id: `NOTIF-${Date.now()}`,
+        user_email: query.from_email,
+        type: 'query_response',
+        title: 'Query Response Received',
+        message: `HR has responded to your query: "${query.subject}"`,
+        action_url: '/support',
+        read: false,
+        created_at: new Date().toISOString(),
+      };
+
+      setNotifications(prev => [employeeNotification, ...prev]);
+    }
+  }, [supportQueries]);
+
   return (
     <DataContext.Provider value={{
       leaveRequests,
@@ -456,6 +555,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       markAllAsRead,
       employees,
       getTeamMembers,
+      supportQueries,
+      getMySupportQueries,
+      getAllSupportQueries,
+      getOpenSupportQueries,
+      createSupportQuery,
+      respondToSupportQuery,
       getOnLeaveToday,
       getTeamOnLeaveToday,
     }}>

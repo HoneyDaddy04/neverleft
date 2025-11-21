@@ -31,6 +31,7 @@ const LeaveRequest = () => {
   const [handoverLink, setHandoverLink] = useState('');
   const [notifiedManager, setNotifiedManager] = useState(false);
   const [willUpdateSlack, setWillUpdateSlack] = useState(false);
+  const [willNotifyChannel, setWillNotifyChannel] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!currentUser) return null;
@@ -308,6 +309,16 @@ const LeaveRequest = () => {
                   />
                   <label htmlFor="slack" className="text-sm cursor-pointer">
                     I will update my Slack status when leave starts
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="channel"
+                    checked={willNotifyChannel}
+                    onCheckedChange={(checked) => setWillNotifyChannel(checked as boolean)}
+                  />
+                  <label htmlFor="channel" className="text-sm cursor-pointer">
+                    I will notify the #leave channel about my absence
                   </label>
                 </div>
               </div>

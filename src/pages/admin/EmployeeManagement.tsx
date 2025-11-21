@@ -8,9 +8,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Pencil, Trash2, Plus, Download, Search, Calculator, AlertTriangle, Calendar } from 'lucide-react';
+import { Pencil, Trash2, Plus, Download, Upload, Search, Calculator, AlertTriangle, Calendar, FileDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useRef } from 'react';
 
 // Calculate prorated leave entitlement based on employment date
 // Rules: <6 months = 0 days, 6-12 months = prorated, 1+ year = full entitlement (14 days)
@@ -57,6 +58,8 @@ const EmployeeManagement = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [formData, setFormData] = useState<Partial<Employee>>({});
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadEmployees();
@@ -163,6 +166,124 @@ const EmployeeManagement = () => {
     toast.success('Employees exported successfully');
   };
 
+  const handleDownloadTemplate = () => {
+    const templateContent = `email,full_name,manager_email,manager_name,employment_date,Current,team,role,country,annual_entitlement,annual_taken,sick_entitlement,sick_taken
+john.doe@company.com,John Doe,manager@company.com,Jane Manager,January 1 2024,2025,Engineering,Software Engineer,Nigeria,14,0,7,0
+jane.smith@company.com,Jane Smith,manager@company.com,Jane Manager,March 15 2024,2025,Customer Success,CS Manager,Nigeria,14,2,7,1`;
+
+    const blob = new Blob([templateContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'employees-template.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    toast.success('Template downloaded. Fill it out and upload to add employees.');
+  };
+
+  const handleFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.csv')) {
+      toast.error('Please upload a CSV file');
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const text = await file.text();
+      const lines = text.trim().split('\n');
+
+      if (lines.length < 2) {
+        toast.error('CSV file must have a header row and at least one data row');
+        setIsUploading(false);
+        return;
+      }
+
+      const headers = lines[0].split(',').map(h => h.trim());
+      const requiredHeaders = ['email', 'full_name'];
+      const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+
+      if (missingHeaders.length > 0) {
+        toast.error(`Missing required columns: ${missingHeaders.join(', ')}`);
+        setIsUploading(false);
+        return;
+      }
+
+      let addedCount = 0;
+      let updatedCount = 0;
+      let errorCount = 0;
+
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map(v => v.trim());
+        if (values.length < 2 || !values[0]) continue;
+
+        const employeeData: Partial<Employee> = {};
+        headers.forEach((header, idx) => {
+          const value = values[idx] || '';
+          switch (header) {
+            case 'email': employeeData.email = value; break;
+            case 'full_name': employeeData.full_name = value; break;
+            case 'manager_email': employeeData.manager_email = value; break;
+            case 'manager_name': employeeData.manager_name = value; break;
+            case 'employment_date': employeeData.employment_date = value; break;
+            case 'Current': employeeData.Current = value; break;
+            case 'team': employeeData.team = value; break;
+            case 'role': employeeData.role = value; break;
+            case 'country': employeeData.country = value; break;
+            case 'annual_entitlement': employeeData.annual_entitlement = parseInt(value) || 14; break;
+            case 'annual_taken': employeeData.annual_taken = parseInt(value) || 0; break;
+            case 'sick_entitlement': employeeData.sick_entitlement = parseInt(value) || 7; break;
+            case 'sick_taken': employeeData.sick_taken = parseInt(value) || 0; break;
+          }
+        });
+
+        if (!employeeData.email || !employeeData.full_name) {
+          errorCount++;
+          continue;
+        }
+
+        // Check if employee exists
+        const existingEmployee = employees.find(e => e.email === employeeData.email);
+        if (existingEmployee) {
+          const success = await csvDataService.updateEmployee(employeeData.email, employeeData);
+          if (success) updatedCount++;
+          else errorCount++;
+        } else {
+          const success = await csvDataService.createEmployee(employeeData as Employee);
+          if (success) addedCount++;
+          else errorCount++;
+        }
+      }
+
+      await loadEmployees();
+
+      if (addedCount > 0 || updatedCount > 0) {
+        toast.success(`CSV processed: ${addedCount} added, ${updatedCount} updated${errorCount > 0 ? `, ${errorCount} errors` : ''}`);
+      } else if (errorCount > 0) {
+        toast.error(`Failed to process ${errorCount} records`);
+      } else {
+        toast.info('No valid employee records found in the CSV');
+      }
+    } catch (error) {
+      toast.error('Failed to process CSV file');
+    } finally {
+      setIsUploading(false);
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   const uniqueCountries = [...new Set(employees.map(e => e.country))];
   const uniqueTeams = [...new Set(employees.map(e => e.team))];
 
@@ -175,12 +296,27 @@ const EmployeeManagement = () => {
             Manage employee data, leave balances, and assignments
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={handleExport} variant="outline">
+        <div className="flex gap-2 flex-wrap">
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".csv"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <Button onClick={handleDownloadTemplate} variant="outline" size="sm">
+            <FileDown className="mr-2 h-4 w-4" />
+            Download Template
+          </Button>
+          <Button onClick={handleFileSelect} variant="outline" size="sm" disabled={isUploading}>
+            <Upload className="mr-2 h-4 w-4" />
+            {isUploading ? 'Uploading...' : 'Upload CSV'}
+          </Button>
+          <Button onClick={handleExport} variant="outline" size="sm">
             <Download className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
-          <Button onClick={handleAdd}>
+          <Button onClick={handleAdd} size="sm">
             <Plus className="mr-2 h-4 w-4" />
             Add Employee
           </Button>
@@ -252,6 +388,7 @@ const EmployeeManagement = () => {
                   <TableHead>Email</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Team</TableHead>
+                  <TableHead>Team Lead</TableHead>
                   <TableHead>Employed Since</TableHead>
                   <TableHead>Country</TableHead>
                   <TableHead>Annual</TableHead>
@@ -267,6 +404,16 @@ const EmployeeManagement = () => {
                     <TableCell>{employee.role}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{employee.team}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      {employee.manager_name ? (
+                        <div className="text-sm">
+                          <div className="font-medium">{employee.manager_name}</div>
+                          <div className="text-xs text-muted-foreground">{employee.manager_email}</div>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">N/A</span>
+                      )}
                     </TableCell>
                     <TableCell className="text-sm">
                       {employee.employment_date || 'N/A'}
@@ -304,7 +451,7 @@ const EmployeeManagement = () => {
                 ))}
                 {filteredEmployees.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={10} className="text-center text-muted-foreground py-8">
                       No employees found
                     </TableCell>
                   </TableRow>

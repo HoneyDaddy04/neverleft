@@ -45,7 +45,7 @@ const Settings = () => {
             {/* Profile Header */}
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${currentUser.full_name}`} />
+                <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${currentUser.full_name}`} />
                 <AvatarFallback className="text-xl">{currentUser.full_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar>
               <div>

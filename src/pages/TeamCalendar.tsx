@@ -41,12 +41,18 @@ const TeamCalendar = () => {
   const { currentUser } = useAuth();
   const { leaveRequests, getTeamMembers, employees } = useData();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState<'all' | 'team' | 'mine'>('all');
+  const [viewMode, setViewMode] = useState<'all' | 'team' | 'mine'>('mine');
+  const [selectedTeam, setSelectedTeam] = useState<string>('all');
 
   if (!currentUser) return null;
 
   const isTeamLead = currentUser.user_role === 'TeamLead';
   const isHROrAdmin = currentUser.user_role === 'HR' || currentUser.user_role === 'Admin';
+  const isExec = currentUser.user_role === 'Exec';
+  const canViewAllOrg = isHROrAdmin || isExec;
+
+  // Get unique teams for team filter
+  const uniqueTeams = [...new Set(employees.map(e => e.team).filter(Boolean))].sort();
 
   // Get approved/in-progress leaves only
   const approvedRequests = leaveRequests.filter(r =>
@@ -55,15 +61,26 @@ const TeamCalendar = () => {
 
   // Filter by view mode
   const filteredRequests = useMemo(() => {
+    let filtered = approvedRequests;
+
     if (viewMode === 'mine') {
-      return approvedRequests.filter(r => r.email === currentUser.email);
-    } else if (viewMode === 'team' && isTeamLead) {
-      const teamMembers = getTeamMembers(currentUser.email);
-      const teamEmails = teamMembers.map(m => m.email);
-      return approvedRequests.filter(r => teamEmails.includes(r.email) || r.email === currentUser.email);
+      return filtered.filter(r => r.email === currentUser.email);
+    } else if (viewMode === 'team') {
+      if (canViewAllOrg && selectedTeam !== 'all') {
+        // HR/Exec filtering by specific team
+        const teamEmployees = employees.filter(e => e.team === selectedTeam);
+        const teamEmails = teamEmployees.map(e => e.email);
+        return filtered.filter(r => teamEmails.includes(r.email));
+      } else if (isTeamLead) {
+        // Team lead sees their team
+        const teamMembers = getTeamMembers(currentUser.email);
+        const teamEmails = teamMembers.map(m => m.email);
+        return filtered.filter(r => teamEmails.includes(r.email) || r.email === currentUser.email);
+      }
     }
-    return approvedRequests;
-  }, [approvedRequests, viewMode, currentUser, isTeamLead]);
+    // 'all' view - return all for HR/Exec/Admin
+    return filtered;
+  }, [approvedRequests, viewMode, currentUser, isTeamLead, canViewAllOrg, selectedTeam, employees]);
 
   // Get holidays for current month
   const currentMonthHolidays = useMemo(() => {
@@ -194,17 +211,37 @@ const TeamCalendar = () => {
         <div className="flex items-center gap-4">
           <div className="space-y-1">
             <Label className="text-xs">View</Label>
-            <Select value={viewMode} onValueChange={(value: 'all' | 'team' | 'mine') => setViewMode(value)}>
+            <Select value={viewMode} onValueChange={(value: 'all' | 'team' | 'mine') => {
+              setViewMode(value);
+              if (value !== 'team') setSelectedTeam('all');
+            }}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {(isHROrAdmin || isTeamLead) && <SelectItem value="all">All Employees</SelectItem>}
-                {isTeamLead && <SelectItem value="team">My Team</SelectItem>}
                 <SelectItem value="mine">My Leave Only</SelectItem>
+                {(canViewAllOrg || isTeamLead) && <SelectItem value="team">Leaves per Team</SelectItem>}
+                {canViewAllOrg && <SelectItem value="all">All Organisation</SelectItem>}
               </SelectContent>
             </Select>
           </div>
+          {/* Team selector for HR/CEO when viewing by team */}
+          {canViewAllOrg && viewMode === 'team' && (
+            <div className="space-y-1">
+              <Label className="text-xs">Team</Label>
+              <Select value={selectedTeam} onValueChange={setSelectedTeam}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select team" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Teams</SelectItem>
+                  {uniqueTeams.map(team => (
+                    <SelectItem key={team} value={team}>{team}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
       </div>
 
@@ -421,7 +458,7 @@ const TeamCalendar = () => {
                     <div key={request.request_id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${request.full_name}`} />
+                          <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${request.full_name}`} />
                           <AvatarFallback>{request.full_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
                         <div>

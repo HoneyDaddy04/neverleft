@@ -214,7 +214,7 @@ const OrgHealth = () => {
                 <div key={emp.email} className="flex items-center justify-between p-3 rounded-lg border bg-red-50/50">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${emp.full_name}`} />
+                      <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${emp.full_name}`} />
                       <AvatarFallback>{emp.full_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                     <div>

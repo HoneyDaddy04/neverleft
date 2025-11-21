@@ -21,6 +21,7 @@ import HRQueries from "./pages/HRQueries";
 import CapacityInsights from "./pages/CapacityInsights";
 import Settings from "./pages/Settings";
 import AICatchup from "./pages/AICatchup";
+import Support from "./pages/Support";
 import ExecDashboard from "./pages/ExecDashboard";
 import ExecBriefing from "./pages/ExecBriefing";
 import OrgHealth from "./pages/OrgHealth";
@@ -179,6 +180,16 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <AuthenticatedLayout>
               <AICatchup />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/support"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout>
+              <Support />
             </AuthenticatedLayout>
           </ProtectedRoute>
         }

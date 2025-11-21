@@ -199,7 +199,7 @@ const TeamApprovals = () => {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar className="h-8 w-8">
-                            <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${request.full_name}`} />
+                            <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${request.full_name}`} />
                             <AvatarFallback>{request.full_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                           </Avatar>
                           <div>
@@ -266,7 +266,7 @@ const TeamApprovals = () => {
               {/* Employee Info */}
               <div className="flex items-center gap-4 p-4 rounded-lg bg-muted/50">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${selectedRequest.full_name}`} />
+                  <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${selectedRequest.full_name}`} />
                   <AvatarFallback>{selectedRequest.full_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
                 <div>

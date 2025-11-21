@@ -23,9 +23,12 @@ import {
   Send,
   Calendar,
   User,
+  MessageSquare,
+  PlayCircle,
 } from 'lucide-react';
 import { formatDate } from '@/lib/mockData';
-import { HandoverTask } from '@/types';
+import { HandoverTask, TaskComment } from '@/types';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Handovers = () => {
   const { currentUser } = useAuth();
@@ -34,6 +37,7 @@ const Handovers = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<HandoverTask | null>(null);
+  const [newComment, setNewComment] = useState('');
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -96,12 +100,45 @@ const Handovers = () => {
     toast.success('Task acknowledged');
   };
 
+  const handleStartWorking = (task: HandoverTask) => {
+    updateHandoverTask(task.id, { status: 'in_progress' });
+    toast.success('Task marked as in progress');
+  };
+
   const handleComplete = (task: HandoverTask) => {
     updateHandoverTask(task.id, {
       status: 'completed',
       completed_date: new Date().toISOString().split('T')[0],
     });
     toast.success('Task marked as completed');
+  };
+
+  const handleAddComment = (task: HandoverTask) => {
+    if (!newComment.trim() || !currentUser) return;
+
+    const comment: TaskComment = {
+      id: `CMT-${Date.now()}`,
+      task_id: task.id,
+      author_email: currentUser.email,
+      author_name: currentUser.full_name,
+      content: newComment.trim(),
+      created_at: new Date().toISOString(),
+    };
+
+    const existingComments = task.comments || [];
+    updateHandoverTask(task.id, {
+      comments: [...existingComments, comment]
+    });
+
+    setNewComment('');
+    // Update selectedTask to show the new comment
+    if (selectedTask?.id === task.id) {
+      setSelectedTask({
+        ...task,
+        comments: [...existingComments, comment]
+      });
+    }
+    toast.success('Comment added');
   };
 
   const handleViewDetails = (task: HandoverTask) => {
@@ -124,6 +161,8 @@ const Handovers = () => {
         return <Badge variant="secondary" className="gap-1"><Clock className="h-3 w-3" /> Pending</Badge>;
       case 'acknowledged':
         return <Badge variant="outline" className="gap-1 border-blue-300 text-blue-700"><Eye className="h-3 w-3" /> Acknowledged</Badge>;
+      case 'in_progress':
+        return <Badge variant="outline" className="gap-1 border-orange-300 text-orange-700 bg-orange-50"><PlayCircle className="h-3 w-3" /> In Progress</Badge>;
       case 'completed':
         return <Badge className="gap-1 bg-green-600"><CheckCheck className="h-3 w-3" /> Completed</Badge>;
       default:
@@ -139,6 +178,7 @@ const Handovers = () => {
   // Stats
   const pendingCount = assignedToMe.filter(t => t.status === 'pending').length;
   const acknowledgedCount = assignedToMe.filter(t => t.status === 'acknowledged').length;
+  const inProgressCount = assignedToMe.filter(t => t.status === 'in_progress').length;
   const completedCount = assignedToMe.filter(t => t.status === 'completed').length;
 
   return (
@@ -188,10 +228,10 @@ const Handovers = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <Eye className="h-5 w-5 text-blue-600" />
-              <span className="text-2xl font-bold text-blue-600">{acknowledgedCount}</span>
+              <PlayCircle className="h-5 w-5 text-orange-600" />
+              <span className="text-2xl font-bold text-orange-600">{inProgressCount + acknowledgedCount}</span>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Acknowledged tasks</p>
+            <p className="text-xs text-muted-foreground mt-1">Active tasks</p>
           </CardContent>
         </Card>
         <Card>
@@ -245,7 +285,7 @@ const Handovers = () => {
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex items-start gap-4 flex-1">
                             <Avatar className="h-10 w-10">
-                              <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${task.owner_name}`} />
+                              <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${task.owner_name}`} />
                               <AvatarFallback>{task.owner_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                             </Avatar>
 
@@ -272,7 +312,7 @@ const Handovers = () => {
                                 <p className="text-sm line-clamp-2">{task.description}</p>
                               )}
 
-                              <div className="flex gap-2 mt-3">
+                              <div className="flex gap-2 mt-3 flex-wrap">
                                 {task.status === 'pending' && (
                                   <Button size="sm" onClick={() => handleAcknowledge(task)}>
                                     <Eye className="h-4 w-4 mr-2" />
@@ -280,12 +320,30 @@ const Handovers = () => {
                                   </Button>
                                 )}
                                 {task.status === 'acknowledged' && (
+                                  <>
+                                    <Button size="sm" variant="outline" onClick={() => handleStartWorking(task)}>
+                                      <PlayCircle className="h-4 w-4 mr-2" />
+                                      Start Working
+                                    </Button>
+                                    <Button size="sm" onClick={() => handleComplete(task)}>
+                                      <CheckCheck className="h-4 w-4 mr-2" />
+                                      Mark Complete
+                                    </Button>
+                                  </>
+                                )}
+                                {task.status === 'in_progress' && (
                                   <Button size="sm" onClick={() => handleComplete(task)}>
                                     <CheckCheck className="h-4 w-4 mr-2" />
                                     Mark Complete
                                   </Button>
                                 )}
-                                <Button size="sm" variant="outline" onClick={() => handleViewDetails(task)}>
+                                <Button size="sm" variant="outline" onClick={() => handleViewDetails(task)} className="gap-1">
+                                  {task.comments && task.comments.length > 0 && (
+                                    <span className="flex items-center gap-1">
+                                      <MessageSquare className="h-3 w-3" />
+                                      {task.comments.length}
+                                    </span>
+                                  )}
                                   View Details
                                 </Button>
                               </div>
@@ -500,7 +558,7 @@ const Handovers = () => {
               <div className="grid gap-3">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${selectedTask.owner_name}`} />
+                    <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${selectedTask.owner_name}`} />
                     <AvatarFallback>{selectedTask.owner_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
                   <div>
@@ -511,7 +569,7 @@ const Handovers = () => {
 
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${selectedTask.assignee_name}`} />
+                    <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${selectedTask.assignee_name}`} />
                     <AvatarFallback>{selectedTask.assignee_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
                   <div>
@@ -547,11 +605,69 @@ const Handovers = () => {
                 <p>Created: {formatDate(selectedTask.created_date)}</p>
                 {selectedTask.completed_date && <p>Completed: {formatDate(selectedTask.completed_date)}</p>}
               </div>
+
+              {/* Comments Section */}
+              <div className="space-y-3 border-t pt-4">
+                <Label className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Comments ({selectedTask.comments?.length || 0})
+                </Label>
+
+                {selectedTask.comments && selectedTask.comments.length > 0 ? (
+                  <ScrollArea className="max-h-[200px]">
+                    <div className="space-y-3">
+                      {selectedTask.comments.map((comment) => (
+                        <div key={comment.id} className="p-3 rounded-lg bg-muted/50">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${comment.author_name}`} />
+                              <AvatarFallback className="text-xs">{comment.author_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm font-medium">{comment.author_name}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(comment.created_at).toLocaleDateString('en-GB', {
+                                day: 'numeric',
+                                month: 'short',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          </div>
+                          <p className="text-sm ml-8">{comment.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center py-3">No comments yet</p>
+                )}
+
+                {/* Add Comment */}
+                <div className="flex gap-2">
+                  <Textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Add a comment..."
+                    rows={2}
+                    className="flex-1"
+                  />
+                  <Button
+                    size="sm"
+                    onClick={() => handleAddComment(selectedTask)}
+                    disabled={!newComment.trim()}
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDetailModalOpen(false)}>
+            <Button variant="outline" onClick={() => {
+              setIsDetailModalOpen(false);
+              setNewComment('');
+            }}>
               Close
             </Button>
             {selectedTask?.assignee_email === currentUser?.email && selectedTask?.status === 'pending' && (
@@ -564,6 +680,23 @@ const Handovers = () => {
               </Button>
             )}
             {selectedTask?.assignee_email === currentUser?.email && selectedTask?.status === 'acknowledged' && (
+              <>
+                <Button variant="outline" onClick={() => {
+                  handleStartWorking(selectedTask);
+                }}>
+                  <PlayCircle className="h-4 w-4 mr-2" />
+                  Start Working
+                </Button>
+                <Button onClick={() => {
+                  handleComplete(selectedTask);
+                  setIsDetailModalOpen(false);
+                }}>
+                  <CheckCheck className="h-4 w-4 mr-2" />
+                  Mark Complete
+                </Button>
+              </>
+            )}
+            {selectedTask?.assignee_email === currentUser?.email && selectedTask?.status === 'in_progress' && (
               <Button onClick={() => {
                 handleComplete(selectedTask);
                 setIsDetailModalOpen(false);

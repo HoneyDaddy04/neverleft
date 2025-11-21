@@ -76,8 +76,8 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
           id: '4',
           type: 'strategic',
           priority: 'medium',
-          title: 'Partnership Opportunity - Flutterwave',
-          description: 'Flutterwave CEO proposed strategic partnership discussion. Could accelerate payments expansion.',
+          title: 'Partnership Opportunity - Jubilee Holdings',
+          description: 'Jubilee Holdings CEO proposed strategic partnership discussion. Could accelerate East Africa insurance expansion.',
           source: 'Email from Partnerships',
           timestamp: '3 days ago',
           action: 'Review proposal',
@@ -86,8 +86,8 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
           id: '5',
           type: 'escalation',
           priority: 'medium',
-          title: 'Enterprise Client Risk - GTBank',
-          description: 'GTBank renewal at risk due to pricing concerns. Account team requesting executive involvement.',
+          title: 'Enterprise Client Risk - Tawuniya Insurance Saudi Arabia',
+          description: 'Tawuniya Insurance renewal at risk due to pricing concerns. Account team requesting executive involvement.',
           source: 'Slack #enterprise-deals',
           timestamp: '2 days ago',
           action: 'Call with client',
@@ -159,7 +159,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
         },
         {
           id: 'e2',
-          subject: 'Re: GTBank Enterprise Renewal',
+          subject: 'Re: Tawuniya Saudi Arabia Enterprise Renewal',
           from: 'VP Sales',
           preview: 'Client is pushing back on the 20% increase. Recommending we offer 12% with extended term...',
           importance: 'high',
@@ -203,7 +203,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
       recommendations: [
         'Review and respond to Sequoia term sheet - time sensitive',
         'Make VP Engineering hire decision before candidate deadline',
-        'Call GTBank stakeholders to save enterprise renewal',
+        'Call Tawuniya stakeholders to save enterprise renewal',
         'Watch All-Hands recording to align on company messaging',
         'Review and approve monthly investor update',
         'Schedule call with Flutterwave CEO for partnership discussion',
@@ -247,8 +247,8 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
           id: '3',
           type: 'escalation',
           priority: 'high',
-          title: 'Client Escalation - Access Bank',
-          description: 'Access Bank raised SLA concerns. Amina handled initial response but needs your guidance.',
+          title: 'Client Escalation - Jubilee Allianz Insurance Uganda',
+          description: 'Jubilee Allianz Insurance raised SLA concerns on claims processing. Anna handled initial response but needs your guidance.',
           source: 'Slack #client-escalations',
           timestamp: '2 days ago',
           action: 'Review and advise',
@@ -270,7 +270,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
           title: 'Team Weekly Standup',
           date: '2025-11-18',
           summary: 'Sprint progress on track. Discussed client feedback and upcoming deliverables.',
-          keyDecisions: ['Reassigned 2 tickets to balance workload', 'Approved Amina to lead Access Bank response'],
+          keyDecisions: ['Reassigned 2 tickets to balance workload', 'Approved Anna to lead Access Bank response'],
           attendees: ['All CS Team Members'],
           recordingUrl: '#',
         },
@@ -285,11 +285,11 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
         },
         {
           id: 'm3',
-          title: '1:1 - Amina (covered by HR)',
+          title: '1:1 - Anna (covered by HR)',
           date: '2025-11-20',
-          summary: 'Amina expressed interest in senior role. Discussed development plan.',
+          summary: 'Anna expressed interest in senior role. Discussed development plan.',
           keyDecisions: ['Identify stretch project for Q1', 'Schedule mentorship with senior CS member'],
-          attendees: ['Amina Okoro', 'HR Rep'],
+          attendees: ['Anna O.', 'HR Rep'],
           recordingUrl: '#',
         },
       ],
@@ -297,8 +297,8 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
         {
           id: 's1',
           channel: '#cs-team',
-          message: 'Great work everyone on the Access Bank situation! They sent a thank you note.',
-          author: 'Amina Okoro',
+          message: 'Great work everyone on the Jubilee Allianz Insurance Uganda situation! They sent a thank you note.',
+          author: 'Anna O.',
           timestamp: '2025-11-20 15:00',
           reactions: 8,
         },
@@ -351,7 +351,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
           name: 'CS Team - Q4 OKRs Tracker',
           type: 'Google Sheet',
           changes: 'Updated progress metrics and added new client success milestones',
-          editor: 'Amina Okoro',
+          editor: 'Anna O.',
           timestamp: '2025-11-19',
         },
         {
@@ -365,7 +365,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
       ],
       recommendations: [
         'Review and approve pending leave requests - team is waiting',
-        'Check in with Amina about Access Bank escalation resolution',
+        'Check in with Anna about Jubilee Allianz Insurance Uganda escalation resolution',
         'Complete Q1 capacity planning before deadline',
         'Review PIP documentation and prepare HR assessment',
         'Watch Leadership Sync recording for holiday coverage requirements',
@@ -389,7 +389,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
         type: 'task',
         priority: 'high',
         title: 'Client Deliverable Due Tomorrow',
-        description: 'The monthly report for First Bank is due tomorrow. Chidi started it but needs your input.',
+        description: 'The monthly report for Misr Insurance Company Egypt is due tomorrow. Chidi started it but needs your input.',
         source: 'Slack from Team Lead',
         timestamp: '1 day ago',
         action: 'Complete report',
@@ -399,7 +399,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
         type: 'meeting',
         priority: 'high',
         title: 'Rescheduled Client Call',
-        description: 'Your call with Zenith Bank was moved to Wednesday 10am. Prep notes attached.',
+        description: 'Your call with UAP Old Mutual Insurance Uganda was moved to Wednesday 10am. Prep notes attached.',
         source: 'Calendar Update',
         timestamp: '2 days ago',
         action: 'Review prep notes',
@@ -422,7 +422,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
         date: '2025-11-18',
         summary: 'Sprint progress review. Team discussed client feedback and workload distribution.',
         keyDecisions: ['New client onboarding process approved', 'Shared best practices for SLA management'],
-        attendees: ['Kabir (Lead)', 'Chidi', 'Ngozi', 'You (excused)'],
+        attendees: ['Isaac (Lead)', 'Chidi', 'Ngozi', 'You (excused)'],
         recordingUrl: '#',
       },
       {
@@ -436,11 +436,11 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
       },
       {
         id: 'm3',
-        title: 'First Bank Monthly Review',
+        title: 'Leadway Assurance Insurance Monthly Review',
         date: '2025-11-20',
-        summary: 'Kabir covered for you. Client satisfied with October performance. New requests discussed.',
+        summary: 'Isaac covered for you. Client satisfied with October claims processing performance. New integration requests discussed.',
         keyDecisions: ['Additional reporting requested for Q1', 'Quarterly business review scheduled for January'],
-        attendees: ['Kabir', 'First Bank Team'],
+        attendees: ['Isaac', 'Leadway Assurance Insurance Team'],
         recordingUrl: '#',
       },
     ],
@@ -449,7 +449,7 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
         id: 's1',
         channel: '#cs-team',
         message: 'New client onboarding checklist is live! Please review and use for all new accounts.',
-        author: 'Kabir Adebayo',
+        author: 'Isaac A.',
         timestamp: '2025-11-19 14:30',
         reactions: 6,
       },
@@ -464,8 +464,8 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
       {
         id: 's3',
         channel: '#cs-team',
-        message: 'Great news - Access Bank just renewed for another year! Team effort paid off.',
-        author: 'Kabir Adebayo',
+        message: 'Great news - AIICO Insurance Nigeria just renewed for another year! Team effort paid off.',
+        author: 'Isaac A.',
         timestamp: '2025-11-20 16:00',
         reactions: 12,
       },
@@ -473,9 +473,9 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
     emailDigest: [
       {
         id: 'e1',
-        subject: 'First Bank - Monthly Report Materials',
+        subject: 'Leadway Assurance Insurance - Monthly Report Materials',
         from: 'Chidi Okonkwo',
-        preview: 'I started the First Bank report while you were out. Can you add the usage analytics section...',
+        preview: 'I started the Leadway Assurance Insurance report while you were out. Can you add the claims analytics section...',
         importance: 'high',
         threadLength: 3,
       },
@@ -490,8 +490,8 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
       {
         id: 'e3',
         subject: 'Team Lunch Friday!',
-        from: 'Kabir Adebayo',
-        preview: 'Celebrating Access Bank renewal with team lunch at 12pm Friday. Hope you can join...',
+        from: 'Isaac A.',
+        preview: 'Celebrating AIICO Insurance Nigeria renewal with team lunch at 12pm Friday. Hope you can join...',
         importance: 'low',
         threadLength: 5,
       },
@@ -499,24 +499,24 @@ const generateCatchupData = (userName: string, userRole: string, leaveStartDate:
     documentChanges: [
       {
         id: 'd1',
-        name: 'Client Onboarding Checklist v2',
+        name: 'Insurance Client Onboarding Checklist v2',
         type: 'Google Doc',
-        changes: 'Updated process with new compliance requirements',
-        editor: 'Kabir Adebayo',
+        changes: 'Updated process with new insurance compliance requirements',
+        editor: 'Isaac A.',
         timestamp: '2025-11-19',
       },
       {
         id: 'd2',
-        name: 'First Bank - October Report Draft',
+        name: 'Leadway Assurance Insurance - October Report Draft',
         type: 'Google Doc',
-        changes: 'Chidi started draft - needs your analytics section',
+        changes: 'Chidi started draft - needs your claims analytics section',
         editor: 'Chidi Okonkwo',
         timestamp: '2025-11-18',
       },
     ],
     recommendations: [
-      'Complete the First Bank report section - deadline is tomorrow',
-      'Review prep notes for Zenith Bank call on Wednesday',
+      'Complete the Leadway Assurance Insurance report section - deadline is tomorrow',
+      'Review prep notes for UAP Old Mutual Insurance Uganda call on Wednesday',
       'Respond to Chidi about December 5th coverage',
       'Watch the CS Skills Workshop recording for new escalation techniques',
       'Submit your December holiday leave request before Nov 25th deadline',
@@ -676,6 +676,16 @@ const AICatchup = () => {
                   <p className="text-sm text-muted-foreground mt-2">{Math.round(progress)}% complete</p>
                 </div>
               </div>
+            ) : myApprovedLeaves.length === 0 ? (
+              <div className="space-y-4">
+                <div className="p-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full w-fit mx-auto">
+                  <Calendar className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-600">No Past Leaves to Catch Up On</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  You don't have any completed leaves yet. Once you return from an approved leave, you'll be able to generate a catchup summary here.
+                </p>
+              </div>
             ) : (
               <div className="space-y-4">
                 <div className="p-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-fit mx-auto">
@@ -690,7 +700,7 @@ const AICatchup = () => {
                   Generate My Catchup Summary
                 </Button>
                 <p className="text-xs text-muted-foreground">
-                  Sources: Gmail, Slack, Google Calendar, Google Docs, Confluence
+                  Sources: Gmail, Slack, Google Calendar, Meeting Notes, Google Docs, JIRA, and departmental tools
                 </p>
               </div>
             )}
@@ -874,7 +884,7 @@ const AICatchup = () => {
                       <div key={msg.id} className="p-4 rounded-lg border bg-card">
                         <div className="flex items-start gap-3">
                           <Avatar className="h-8 w-8">
-                            <AvatarImage src={`https://api.dicebear.com/9.x/personas/svg?seed=${msg.author}`} />
+                            <AvatarImage src={`https://api.dicebear.com/9.x/avataaars/svg?skinColor=brown,darkBrown,black&seed=${msg.author}`} />
                             <AvatarFallback>{msg.author[0]}</AvatarFallback>
                           </Avatar>
                           <div className="flex-1">

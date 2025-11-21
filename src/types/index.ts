@@ -12,7 +12,10 @@ export type HRStatus = '' | 'approved' | 'declined';
 // Task priorities and statuses for handovers
 export type TaskPriority = 'high' | 'medium' | 'low';
 export type TaskStatus = 'pending' | 'acknowledged' | 'in_progress' | 'completed';
-export type NotificationType = 'approval' | 'rejection' | 'query' | 'handover' | 'reminder' | 'catchup';
+export type NotificationType = 'approval' | 'rejection' | 'query' | 'handover' | 'reminder' | 'catchup' | 'query_response';
+
+// Support Query categories for HR
+export type QueryCategory = 'leave_policy' | 'benefits' | 'payroll' | 'general' | 'complaint' | 'other';
 
 // Employee interface - matches Google Sheets employee table
 export interface Employee {
@@ -86,6 +89,17 @@ export interface HandoverTask {
   due_date: string;
   created_date: string;
   completed_date: string;
+  comments?: TaskComment[];
+}
+
+// Task Comment interface
+export interface TaskComment {
+  id: string;
+  task_id: string;
+  author_email: string;
+  author_name: string;
+  content: string;
+  created_at: string;
 }
 
 // Post-Leave Context Notes
@@ -113,7 +127,7 @@ export interface Notification {
   related_request_id?: string;
 }
 
-// Query interface for HR queries
+// Query interface for HR queries (on leave requests)
 export interface Query {
   id: string;
   request_id: string;
@@ -124,6 +138,22 @@ export interface Query {
   response: string | null;
   responded_at: string | null;
   resolved: boolean;
+  created_at: string;
+}
+
+// Support Query interface for employee queries to HR
+export interface SupportQuery {
+  id: string;
+  from_email: string;
+  from_name: string;
+  category: QueryCategory;
+  subject: string;
+  message: string;
+  response: string | null;
+  responded_by_email: string | null;
+  responded_by_name: string | null;
+  responded_at: string | null;
+  status: 'open' | 'in_progress' | 'resolved';
   created_at: string;
 }
 
