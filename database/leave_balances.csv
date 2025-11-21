@@ -1,0 +1,5 @@
+balance_id,employee_id,leave_type_id,year,total_allocated,used,remaining,carried_forward,created_at,updated_at
+BAL001,EMP001,LT001,2025,25,5,20,0,2025-01-01,2025-11-13
+BAL002,EMP001,LT002,2025,15,3,12,0,2025-01-01,2025-11-13
+BAL003,EMP002,LT001,2025,25,2,23,0,2025-01-01,2025-11-13
+BAL004,EMP003,LT001,2025,20,8,12,0,2025-01-01,2025-11-13

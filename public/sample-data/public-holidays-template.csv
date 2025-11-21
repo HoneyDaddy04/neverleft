@@ -1,0 +1,46 @@
+country,holiday_name,holiday_date,year,is_active
+Nigeria,New Year's Day,2025-01-01,2025,TRUE
+Nigeria,Good Friday,2025-04-18,2025,TRUE
+Nigeria,Easter Monday,2025-04-21,2025,TRUE
+Nigeria,Workers' Day,2025-05-01,2025,TRUE
+Nigeria,Democracy Day,2025-06-12,2025,TRUE
+Nigeria,Eid al-Fitr,2025-03-31,2025,TRUE
+Nigeria,Eid al-Adha,2025-06-07,2025,TRUE
+Nigeria,Independence Day,2025-10-01,2025,TRUE
+Nigeria,Christmas Day,2025-12-25,2025,TRUE
+Nigeria,Boxing Day,2025-12-26,2025,TRUE
+Ghana,New Year's Day,2025-01-01,2025,TRUE
+Ghana,Independence Day,2025-03-06,2025,TRUE
+Ghana,Good Friday,2025-04-18,2025,TRUE
+Ghana,Easter Monday,2025-04-21,2025,TRUE
+Ghana,May Day,2025-05-01,2025,TRUE
+Ghana,Eid al-Fitr,2025-03-31,2025,TRUE
+Ghana,Eid al-Adha,2025-06-07,2025,TRUE
+Ghana,Founders' Day,2025-08-04,2025,TRUE
+Ghana,Kwame Nkrumah Memorial Day,2025-09-21,2025,TRUE
+Ghana,Christmas Day,2025-12-25,2025,TRUE
+Ghana,Boxing Day,2025-12-26,2025,TRUE
+South Africa,New Year's Day,2025-01-01,2025,TRUE
+South Africa,Human Rights Day,2025-03-21,2025,TRUE
+South Africa,Good Friday,2025-04-18,2025,TRUE
+South Africa,Family Day,2025-04-21,2025,TRUE
+South Africa,Freedom Day,2025-04-27,2025,TRUE
+South Africa,Workers' Day,2025-05-01,2025,TRUE
+South Africa,Youth Day,2025-06-16,2025,TRUE
+South Africa,National Women's Day,2025-08-09,2025,TRUE
+South Africa,Heritage Day,2025-09-24,2025,TRUE
+South Africa,Day of Reconciliation,2025-12-16,2025,TRUE
+South Africa,Christmas Day,2025-12-25,2025,TRUE
+South Africa,Day of Goodwill,2025-12-26,2025,TRUE
+Uganda,New Year's Day,2025-01-01,2025,TRUE
+Uganda,NRM Liberation Day,2025-01-26,2025,TRUE
+Uganda,International Women's Day,2025-03-08,2025,TRUE
+Uganda,Good Friday,2025-04-18,2025,TRUE
+Uganda,Easter Monday,2025-04-21,2025,TRUE
+Uganda,Labour Day,2025-05-01,2025,TRUE
+Uganda,Eid al-Fitr,2025-03-31,2025,TRUE
+Uganda,Martyrs' Day,2025-06-03,2025,TRUE
+Uganda,Heroes' Day,2025-06-09,2025,TRUE
+Uganda,Independence Day,2025-10-09,2025,TRUE
+Uganda,Christmas Day,2025-12-25,2025,TRUE
+Uganda,Boxing Day,2025-12-26,2025,TRUE

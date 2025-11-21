@@ -1,0 +1,3 @@
+approval_id,request_id,approver_id,approval_level,status,comments,action_date,created_at,updated_at
+APP001,REQ001,EMP005,1,Approved,Enjoy your holiday,2025-11-02,2025-11-02,2025-11-02
+APP002,REQ003,EMP005,1,Rejected,Need at least 48 hours notice,2025-11-11,2025-11-11,2025-11-11

@@ -1,0 +1,7 @@
+policy_name,leave_type,days_entitled,leave_days,minimum_employment_months,advance_notice_days,requires_manager_approval,requires_hr_approval,requires_handover,active,last_updated,updated_by
+Annual Leave Entitlement,Annual,14,workday,6,7,TRUE,TRUE,TRUE,TRUE,2025-01-01,oa@curacel.com
+Sick Leave Entitlement,Sick,7,workday,0,0,FALSE,FALSE,FALSE,TRUE,2025-01-01,oa@curacel.com
+Paternal Leave Entitlement,Paternal,5,workday,0,30,TRUE,TRUE,TRUE,TRUE,2025-01-01,oa@curacel.com
+Maternal Leave Entitlement,Maternal,90,calendarday,3,90,TRUE,TRUE,TRUE,TRUE,2025-01-01,oa@curacel.com
+Bereavement Leave Entitlement,Bereavement,3,workday,0,0,TRUE,TRUE,FALSE,TRUE,2025-01-01,oa@curacel.com
+Compassionate Leave Entitlement,Compassionate,5,workday,3,7,TRUE,TRUE,TRUE,TRUE,2025-01-01,oa@curacel.com

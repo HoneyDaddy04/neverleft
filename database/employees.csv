@@ -1,0 +1,4 @@
+employee_id,first_name,last_name,email,phone,department,position,manager_id,hire_date,employment_status,annual_leave_balance,sick_leave_balance,created_at,updated_at
+EMP001,John,Doe,john.doe@company.com,+1234567890,Engineering,Senior Developer,EMP005,2022-01-15,Active,20,10,2022-01-15,2025-11-13
+EMP002,Jane,Smith,jane.smith@company.com,+1234567891,HR,HR Manager,,2020-03-10,Active,25,12,2020-03-10,2025-11-13
+EMP003,Mike,Johnson,mike.johnson@company.com,+1234567892,Sales,Sales Representative,EMP006,2023-05-20,Active,15,10,2023-05-20,2025-11-13

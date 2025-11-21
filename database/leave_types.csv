@@ -1,0 +1,8 @@
+leave_type_id,leave_type_name,description,is_paid,requires_documentation,max_days_per_year,created_at,updated_at
+LT001,Annual Leave,Regular paid vacation time,TRUE,FALSE,25,2025-11-13,2025-11-13
+LT002,Sick Leave,Medical leave for illness,TRUE,TRUE,15,2025-11-13,2025-11-13
+LT003,Maternity Leave,Leave for new mothers,TRUE,TRUE,90,2025-11-13,2025-11-13
+LT004,Paternity Leave,Leave for new fathers,TRUE,TRUE,14,2025-11-13,2025-11-13
+LT005,Unpaid Leave,Leave without pay,FALSE,FALSE,30,2025-11-13,2025-11-13
+LT006,Bereavement Leave,Leave for family loss,TRUE,TRUE,5,2025-11-13,2025-11-13
+LT007,Study Leave,Educational purposes,TRUE,TRUE,10,2025-11-13,2025-11-13

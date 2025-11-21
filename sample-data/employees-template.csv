@@ -1,0 +1,9 @@
+email,full_name,manager_email,manager_name,employment_date,Current,team,role,country,annual_entitlement,annual_taken,sick_entitlement,sick_taken
+ka@curacel.com,Kabir Adebayo,ho@curacel.com,Henry Okonkwo,15/01/2023,2025,Product,Product Designer,Nigeria,14,7,7,0
+ho@curacel.com,Henry Okonkwo,,,01/06/2021,2025,Product,Product Manager,Nigeria,14,4,7,2
+oa@curacel.com,Ore Adeyemi,,,10/03/2020,2025,Human Resources,HR Manager,Nigeria,14,2,7,0
+jo@curacel.com,Jane Okafor,ho@curacel.com,Henry Okonkwo,01/09/2022,2025,Product,Product Designer,Ghana,14,5,7,1
+ma@curacel.com,Mike Adewale,ho@curacel.com,Henry Okonkwo,20/05/2023,2025,Engineering,Software Engineer,South Africa,14,3,7,0
+am@curacel.com,Amara Mensah,oa@curacel.com,Ore Adeyemi,10/08/2024,2025,Human Resources,HR Associate,Uganda,14,0,7,0
+cn@curacel.com,Chinwe Nkosi,ho@curacel.com,Henry Okonkwo,01/03/2022,2025,Engineering,Senior Engineer,South Africa,14,8,7,3
+kb@curacel.com,Kwame Boateng,ho@curacel.com,Henry Okonkwo,01/11/2024,2025,Product,Junior Designer,Ghana,14,0,7,0

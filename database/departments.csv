@@ -1,0 +1,6 @@
+department_id,department_name,department_head_id,location,created_at,updated_at
+DEPT001,Engineering,EMP005,Building A - Floor 3,2025-11-13,2025-11-13
+DEPT002,HR,EMP002,Building B - Floor 1,2025-11-13,2025-11-13
+DEPT003,Sales,EMP006,Building A - Floor 2,2025-11-13,2025-11-13
+DEPT004,Marketing,EMP007,Building B - Floor 2,2025-11-13,2025-11-13
+DEPT005,Finance,EMP008,Building A - Floor 1,2025-11-13,2025-11-13

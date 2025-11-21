@@ -1,0 +1,4 @@
+request_id,full_name,email,leave_type,request_date,start_date,end_date,days_requested,handover_document_link,status,manager_email,manager_status,manager_decision_date,manager_comment,hr_status,hr_decision_date,hr_comment,timestamp,annual_taken,annual_balance,sick_taken,sick_balance
+1731859200000,Kabir Adebayo,ka@curacel.com,Annual,2025-11-10,2025-11-25,2025-11-29,5,https://docs.google.com/document/d/sample1,Approved,ho@curacel.com,Approved,2025-11-11,Approved. Enjoy your time off!,Approved,2025-11-12,All good,2025-11-10T08:30:00,7,7,0,7
+1731964800000,Jane Okafor,jo@curacel.com,Sick,2025-11-19,2025-11-20,2025-11-21,2,,Auto-Approved,,,,,,,2025-11-19T07:15:00,5,9,1,6
+1732032000000,Mike Adewale,ma@curacel.com,Annual,2025-11-15,2025-12-05,2025-12-10,4,https://docs.google.com/document/d/sample2,Pending Manager Approval,ho@curacel.com,Pending,,,Pending,,,2025-11-15T14:20:00,3,11,0,7

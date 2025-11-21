@@ -1,0 +1,4 @@
+request_id,employee_id,leave_type_id,start_date,end_date,total_days,reason,status,approver_id,submission_date,approval_date,rejection_reason,created_at,updated_at
+REQ001,EMP001,LT001,2025-12-20,2025-12-27,8,Christmas vacation,Approved,EMP005,2025-11-01,2025-11-02,,2025-11-01,2025-11-02
+REQ002,EMP003,LT002,2025-11-15,2025-11-16,2,Flu symptoms,Pending,EMP006,2025-11-13,,,2025-11-13,2025-11-13
+REQ003,EMP001,LT001,2025-11-25,2025-11-25,1,Personal appointment,Rejected,EMP005,2025-11-10,2025-11-11,Insufficient notice period,2025-11-10,2025-11-11

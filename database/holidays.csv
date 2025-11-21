@@ -1,0 +1,5 @@
+holiday_id,holiday_name,holiday_date,is_recurring,description,created_at,updated_at
+HOL001,New Year's Day,2025-01-01,TRUE,New Year celebration,2025-11-13,2025-11-13
+HOL002,Christmas Day,2025-12-25,TRUE,Christmas celebration,2025-11-13,2025-11-13
+HOL003,Independence Day,2025-07-04,TRUE,National holiday,2025-11-13,2025-11-13
+HOL004,Thanksgiving,2025-11-27,TRUE,Thanksgiving holiday,2025-11-13,2025-11-13
